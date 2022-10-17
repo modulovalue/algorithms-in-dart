@@ -1,20 +1,20 @@
-import 'package:test/test.dart';
-import 'package:algorithms/trees/binary_tree.dart';
 import 'package:algorithms/trees/binary_search_tree.dart';
+import 'package:algorithms/trees/binary_tree.dart';
+import 'package:test/test.dart';
 
 void main() {
   late BinarySearchTree<int> emptyTree, singleNodeTree, multiNodeTree;
   late List<BinarySearchTree<int>> treeList;
   setUp(() {
-    emptyTree = BinarySearchTree();
-    singleNodeTree = BinarySearchTree.withSingleValue(0);
-    multiNodeTree = BinarySearchTree.fromList([11, -2, 1, 0, 21, 17, 9, -3]);
+    emptyTree = BinarySearchTree<int>((final a, final b) => a.compareTo(b!));
+    singleNodeTree = BinarySearchTree.withSingleValue(0, (final a, final b) => a.compareTo(b!));
+    multiNodeTree = BinarySearchTree.fromList([11, -2, 1, 0, 21, 17, 9, -3], (final a, final b) => a.compareTo(b!));
     treeList = [emptyTree, singleNodeTree, multiNodeTree];
   });
 
   test('Binary Search Tree property', () {
     for (var tree in treeList) {
-      expect(true, isValidBinarySearchTree(tree));
+      expect(true, is_valid_binary_search_tree(tree));
     }
   });
 
@@ -60,7 +60,7 @@ void main() {
   });
 
   test('Add', () {
-    var ascendingTree = BinarySearchTree();
+    var ascendingTree = BinarySearchTree<int>((final a, final b) => a.compareTo(b!));
     ascendingTree.add(10);
     ascendingTree.add(20);
     ascendingTree.add(30);
@@ -71,9 +71,9 @@ void main() {
     expect(ascendingTree.root!.right!.left, isNull);
     expect(ascendingTree.root!.right!.right!.left, isNull);
     expect(ascendingTree.root!.right!.right!.right, isNull);
-    expect(true, isValidBinarySearchTree(ascendingTree));
+    expect(true, is_valid_binary_search_tree(ascendingTree));
 
-    var descendingTree = BinarySearchTree();
+    var descendingTree = BinarySearchTree<int>((final a, final b) => a.compareTo(b!));
     descendingTree.add(-10);
     descendingTree.add(-20);
     descendingTree.add(-30);
@@ -84,11 +84,11 @@ void main() {
     expect(descendingTree.root!.left!.right, equals(null));
     expect(descendingTree.root!.left!.left!.right, isNull);
     expect(descendingTree.root!.left!.left!.left, isNull);
-    expect(true, isValidBinarySearchTree(descendingTree));
+    expect(true, is_valid_binary_search_tree(descendingTree));
   });
 
   test('Nullify', () {
-    var tree = BinarySearchTree.fromList([1, 2, 3]);
+    var tree = BinarySearchTree<int>.fromList([1, 2, 3], (final a, final b) => a.compareTo(b!));
     tree.nullify();
     expect(tree.isEmpty, isTrue);
   });
@@ -106,24 +106,24 @@ void main() {
 
   group('Traversal ', () {
     test('Pre-order', () {
-      expect(emptyTree.preOrder(), <int>[]);
-      expect(singleNodeTree.preOrder(), <int>[0]);
-      expect(
-          multiNodeTree.preOrder(), equals(<int>[11, -2, -3, 1, 0, 9, 21, 17]));
+      expect(emptyTree.pre_order(), <int>[]);
+      expect(singleNodeTree.pre_order(), <int>[0]);
+      expect(multiNodeTree.pre_order(),
+          equals(<int>[11, -2, -3, 1, 0, 9, 21, 17]));
     });
 
     test('Post-order', () {
-      expect(emptyTree.postOrder(), <int>[]);
-      expect(singleNodeTree.postOrder(), <int>[0]);
-      expect(multiNodeTree.postOrder(),
+      expect(emptyTree.post_order(), <int>[]);
+      expect(singleNodeTree.post_order(), <int>[0]);
+      expect(multiNodeTree.post_order(),
           equals(<int>[-3, 0, 9, 1, -2, 17, 21, 11]));
     });
 
     test('In-order', () {
-      expect(emptyTree.inOrder(), <int>[]);
-      expect(singleNodeTree.inOrder(), <int>[0]);
+      expect(emptyTree.in_order(), <int>[]);
+      expect(singleNodeTree.in_order(), <int>[0]);
       expect(
-          multiNodeTree.inOrder(), equals(<int>[-3, -2, 0, 1, 9, 11, 17, 21]));
+          multiNodeTree.in_order(), equals(<int>[-3, -2, 0, 1, 9, 11, 17, 21]));
     });
   });
 
@@ -142,7 +142,7 @@ void main() {
                  /
                 3
     ----------------------*/
-    var test = BinarySearchTree.fromList([-1, -2, 0, 2, 5, 4, 3]);
+    var test = BinarySearchTree<int>.fromList([-1, -2, 0, 2, 5, 4, 3], (final a, final b) => a.compareTo(b!));
     test.balance();
     /*----------------------
       tree after balance()
@@ -152,15 +152,15 @@ void main() {
           / \   / \
         -2   0 3   5
     ----------------------*/
-    expect(test.preOrder(), equals(<int>[2, -1, -2, 0, 4, 3, 5]));
-    expect(true, isValidBinarySearchTree(test));
+    expect(test.pre_order(), equals(<int>[2, -1, -2, 0, 4, 3, 5]));
+    expect(true, is_valid_binary_search_tree(test));
   });
 
   test('Delete node', () {
     emptyTree.delete(1);
-    expect(emptyTree.inOrder(), <int>[]);
+    expect(emptyTree.in_order(), <int>[]);
     singleNodeTree.delete(0);
-    expect(emptyTree.inOrder(), <int>[]);
+    expect(emptyTree.in_order(), <int>[]);
 
     /*----------------------
                11
@@ -172,101 +172,109 @@ void main() {
             0   9
     ----------------------*/
 
-    var test = BinarySearchTree.fromList([11, -2, 1, 0, 21, 17, 9, -3]);
+    var test = BinarySearchTree<int>.fromList([11, -2, 1, 0, 21, 17, 9, -3], (final a, final b) => a.compareTo(b!));
     // delete node with no child
     test.delete(-3);
-    expect(true, isValidBinarySearchTree(test));
+    expect(true, is_valid_binary_search_tree(test));
 
-    test = BinarySearchTree.fromList([11, -2, 1, 0, 21, 17, 9, -3]);
+    test = BinarySearchTree<int>.fromList([11, -2, 1, 0, 21, 17, 9, -3], (final a, final b) => a.compareTo(b!));
     // delete node with one child
     test.delete(21);
-    expect(true, isValidBinarySearchTree(test));
+    expect(true, is_valid_binary_search_tree(test));
 
-    test = BinarySearchTree.fromList([11, -2, 1, 0, 21, 17, 9, -3]);
+    test = BinarySearchTree<int>.fromList([11, -2, 1, 0, 21, 17, 9, -3], (final a, final b) => a.compareTo(b!));
     // delete node with two children
     test.delete(-2);
-    expect(true, isValidBinarySearchTree(test));
+    expect(true, is_valid_binary_search_tree(test));
 
-    test = BinarySearchTree.fromList([11, -2, 1, 0, 21, 17, 9, -3]);
+    test = BinarySearchTree<int>.fromList([11, -2, 1, 0, 21, 17, 9, -3], (final a, final b) => a.compareTo(b!));
     // delete root node
     test.delete(11);
-    expect(true, isValidBinarySearchTree(test));
+    expect(true, is_valid_binary_search_tree(test));
   });
 }
 
-/// Creates a Binary Search tree from the given [preOrder] and [inOrder]
+/// Creates a Binary Search tree from the given [pre_order] and [in_order]
 ///  traversals.
 ///
 /// [root] must not be `null`.
-void createBinarySearchTree<V extends Comparable>(
-    BinaryNode root, List<V> preOrder, List<V> inOrder) {
+void create_binary_search_tree<V>(
+  final BinaryNode<V> root,
+  final List<V> pre_order,
+  final List<V> in_order,
+) {
   expect(root, isNotNull);
-  expect(true, preOrder.length == inOrder.length);
-
+  expect(true, pre_order.length == in_order.length);
   // [root] is the only node in subtree.
-  if (preOrder.length <= 1) {
+  if (pre_order.length <= 1) {
     return;
-  }
-
-  // [root] has only one child.
-  else if (preOrder.length == 2) {
-    if (preOrder[0] == inOrder[0]) {
-      root.right = BinaryNode(preOrder[1]);
+  } else if (pre_order.length == 2) {
+    // [root] has only one child.
+    if (pre_order[0] == in_order[0]) {
+      root.right = BinaryNode(pre_order[1]);
     } else {
-      root.left = BinaryNode(preOrder[1]);
+      root.left = BinaryNode(pre_order[1]);
     }
-  }
-
-  // Multiple nodes present.
-  else {
+  } else {
+    // Multiple nodes present.
     // BST must have unique values.
-    final uniqueValues = {...preOrder}.length == preOrder.length &&
-        {...inOrder}.length == inOrder.length;
-    expect(true, uniqueValues);
-
+    final unique_values = {...pre_order}.length == pre_order.length &&
+        {...in_order}.length == in_order.length;
+    expect(true, unique_values);
     // Index of [root] in [inOrder] list.
-    var iIndex = inOrder.indexOf(preOrder[0]);
-
+    int i_index = in_order.indexOf(pre_order[0]);
     // Set of values in the left subtree of [root].
-    var set = {...inOrder.sublist(0, iIndex)};
-
+    Set<V> set = {...in_order.sublist(0, i_index)};
     // Index of last value of left subtree in [preOrder] list.
-    var pIndex = preOrder.indexOf(set.last);
-    for (var i = pIndex + 1; set.contains(preOrder[i]); i++) {
-      pIndex = i;
+    int p_index = pre_order.indexOf(set.last);
+    for (var i = p_index + 1; set.contains(pre_order[i]); i++) {
+      p_index = i;
     }
-
-    _addLeft(root, preOrder.sublist(1, pIndex + 1), inOrder.sublist(0, iIndex));
-
-    _addRight(root, preOrder.sublist(pIndex + 1), inOrder.sublist(iIndex + 1));
+    _add_left(
+      root,
+      pre_order.sublist(1, p_index + 1),
+      in_order.sublist(0, i_index),
+    );
+    _add_right(
+      root,
+      pre_order.sublist(p_index + 1),
+      in_order.sublist(i_index + 1),
+    );
   }
 }
 
 /// Checks if [tree] is a valid Binary Search Tree or not.
 ///
 /// If inOrder traversal of [tree] has values "in-order", it is valid.
-bool isValidBinarySearchTree(BinarySearchTree tree) {
-  if (tree.isEmpty) return true;
-
-  var inOrder = tree.inOrder();
-  for (var i = 0; i < inOrder.length - 1; i++) {
-    if (inOrder[i].compareTo(inOrder[i + 1]) >= 0) return false;
+bool is_valid_binary_search_tree<T>(final BinarySearchTree<T> tree,) {
+  if (tree.isEmpty) {
+    return true;
+  }
+  List<T> in_order = tree.in_order();
+  for (int i = 0; i < in_order.length - 1; i++) {
+    if (tree.compare(in_order[i], in_order[i + 1]) >= 0) {
+      return false;
+    }
   }
   return true;
 }
 
 /// Adds left subtree to [root].
-void _addLeft<V extends Comparable>(
-    BinaryNode root, List<V> preOrder, List<V> inOrder) {
+void _add_left<V>(
+  final BinaryNode<V> root,
+  final List<V> preOrder,
+  final List<V> inOrder,
+) {
   root.left = BinaryNode(preOrder[0]);
-
-  createBinarySearchTree(root.left!, preOrder, inOrder);
+  create_binary_search_tree(root.left!, preOrder, inOrder);
 }
 
 /// Adds right subtree to [root].
-void _addRight<V extends Comparable>(
-    BinaryNode root, List<V> preOrder, List<V> inOrder) {
+void _add_right<V>(
+  final BinaryNode<V> root,
+  final List<V> preOrder,
+  final List<V> inOrder,
+) {
   root.right = BinaryNode(preOrder[0]);
-
-  createBinarySearchTree(root.right!, preOrder, inOrder);
+  create_binary_search_tree(root.right!, preOrder, inOrder);
 }

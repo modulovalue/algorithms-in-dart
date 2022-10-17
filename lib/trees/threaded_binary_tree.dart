@@ -33,6 +33,8 @@ class ThreadedBinaryTree<V extends Comparable>
   /// Creates an empty Threaded Binary tree.
   ThreadedBinaryTree();
 
+  int Function(V, V?) get compare => (final a, final b) => a.compareTo(b);
+
   /// Creates a Threaded Binary tree with all the values of [list].
   ThreadedBinaryTree.fromList(List<V> list) {
     for (var value in list) {
@@ -100,7 +102,7 @@ class ThreadedBinaryTree<V extends Comparable>
   }
 
   @override
-  bool contains(V value) => inOrder().contains(value);
+  bool contains(V value) => in_order().contains(value);
 
   @override
   void delete(V value) {
@@ -145,7 +147,7 @@ class ThreadedBinaryTree<V extends Comparable>
   }
 
   @override
-  List<V> inOrder() {
+  List<V> in_order() {
     var result = <V>[];
     if (isEmpty) return result;
 
@@ -162,14 +164,14 @@ class ThreadedBinaryTree<V extends Comparable>
   }
 
   @override
-  List<V> postOrder() {
+  List<V> post_order() {
     var result = <V>[];
     _postOrder(root, result);
     return result;
   }
 
   @override
-  List<V> preOrder() {
+  List<V> pre_order() {
     var result = <V>[];
     if (isEmpty) return result;
 

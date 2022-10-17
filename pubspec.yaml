@@ -12,3 +12,4 @@ environment:
 
 dev_dependencies:
   test: ^1.17.8
+  extra_pedantic: 3.0.0

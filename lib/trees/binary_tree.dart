@@ -2,7 +2,7 @@ import 'adt/binary_tree_adt.dart';
 
 /// A binary node has at most two children, which are referred to as the
 ///  [left] child and the [right] child.
-class BinaryNode<V extends Comparable> extends BinaryNodeADT<BinaryNode<V>, V> {
+class BinaryNode<V> extends BinaryNodeADT<BinaryNode<V>, V> {
   V? value;
 
   /// Creates a node with [value].
@@ -11,9 +11,9 @@ class BinaryNode<V extends Comparable> extends BinaryNodeADT<BinaryNode<V>, V> {
 
 /// A binary tree is defined recursively as a collection of
 ///  [BinaryNode]s (starting at a [root] node).
-class BinaryTree<V extends Comparable> {
+class BinaryTree<V> {
   /// Root of tree.
-  BinaryNode? root;
+  BinaryNode<V>? root;
 
   /// Creates an empty Binary tree.
   BinaryTree();

@@ -88,35 +88,35 @@ void main() {
   test('Add', () {
     var avlTree = AvlTree<int>();
     avlTree.add(50);
-    expect(avlTree.preOrder(), <int>[50]);
+    expect(avlTree.pre_order(), <int>[50]);
     avlTree.add(40);
-    expect(avlTree.preOrder(), <int>[50, 40]);
+    expect(avlTree.pre_order(), <int>[50, 40]);
 
     avlTree.add(35);
     // RR: Right rotation about 50
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
     avlTree.add(58);
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
     avlTree.add(48);
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     avlTree.add(42);
     // RL: Right rotation about 50, Left rotation about 40
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     avlTree.add(60);
     // LL: Left rotation about 50
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
     avlTree.add(30);
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     avlTree.add(33);
     // LR: Left rotation about 30, Right rotation about 35
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     avlTree.add(25);
     // RR: Right rotation about 40
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
   });
 
   test('Nullify', () {
@@ -139,55 +139,55 @@ void main() {
 
   group('Traversal', () {
     test('Pre-order', () {
-      expect(emptyTree.preOrder(), <int>[]);
-      expect(singleNodeTree.preOrder(), <int>[0]);
-      expect(multipleNodetree.preOrder(),
+      expect(emptyTree.pre_order(), <int>[]);
+      expect(singleNodeTree.pre_order(), <int>[0]);
+      expect(multipleNodetree.pre_order(),
           equals(<String>['n', 'i', 'h', 'a', 'l', 'k', 'm', 'p', 'o', 'q']));
     });
 
     test('Post-order', () {
-      expect(emptyTree.postOrder(), <int>[]);
-      expect(singleNodeTree.postOrder(), <int>[0]);
-      expect(multipleNodetree.postOrder(),
+      expect(emptyTree.post_order(), <int>[]);
+      expect(singleNodeTree.post_order(), <int>[0]);
+      expect(multipleNodetree.post_order(),
           equals(<String>['a', 'h', 'k', 'm', 'l', 'i', 'o', 'q', 'p', 'n']));
     });
 
     test('In-order', () {
-      expect(emptyTree.inOrder(), <int>[]);
-      expect(singleNodeTree.inOrder(), <int>[0]);
-      expect(multipleNodetree.inOrder(),
+      expect(emptyTree.in_order(), <int>[]);
+      expect(singleNodeTree.in_order(), <int>[0]);
+      expect(multipleNodetree.in_order(),
           equals(<String>['a', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q']));
     });
   });
 
   test('Delete node', () {
     emptyTree.delete('1');
-    expect(emptyTree.inOrder(), <int>[]);
+    expect(emptyTree.in_order(), <int>[]);
 
     singleNodeTree.delete(0);
-    expect(emptyTree.inOrder(), <int>[]);
+    expect(emptyTree.in_order(), <int>[]);
 
     multipleNodetree.delete('q');
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
     multipleNodetree.delete('n');
     // RR: Right rotation about 'o'
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     multipleNodetree.delete('a');
     // RL: Right rotation about 'o', Left rotation about 'i'
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
     multipleNodetree.delete('h');
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
     multipleNodetree.delete('k');
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     multipleNodetree.delete('i');
     // LL: Left rotation about 'l'
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
 
     multipleNodetree.delete('p');
     // LR: Left rotation about 'l', Right rotation about 'o'
-    expect(true, isValidAvlTree(multipleNodetree));
+    expect(true, is_valid_avl_tree(multipleNodetree));
   });
 }
 
@@ -196,43 +196,49 @@ void main() {
 /// Valid Avl tree must be a valid Binary Search tree
 ///  and balance (difference between height of left and right subtree) of all
 ///  it's nodes must belong to the set `{-1, 0, 1}`.
-bool isValidAvlTree(AvlTree<Comparable> tree) {
-  if (tree.isEmpty) return true;
-
-  var test = BinarySearchTree.withSingleValue(tree.root!.value!);
-  createBinarySearchTree(test.root!, tree.preOrder(), tree.inOrder());
-  expect(true, isValidBinarySearchTree(test));
-
-  var balance = _leftBalance(tree.root!.left) + _rightBlance(tree.root!.right);
-  return -1 <= balance && balance <= 1 ? true : false;
+bool is_valid_avl_tree(
+  final AvlTree<Comparable> tree,
+) {
+  if (tree.isEmpty) {
+    return true;
+  } else {
+    final test = BinarySearchTree<Comparable>.withSingleValue(
+      tree.root!.value!,
+      (final a, b) => a.compareTo(b),
+    );
+    create_binary_search_tree(test.root!, tree.pre_order(), tree.in_order());
+    expect(true, is_valid_binary_search_tree(test));
+    int balance =
+        _left_balance(tree.root!.left) + _right_balance(tree.root!.right);
+    return -1 <= balance && balance <= 1 ? true : false;
+  }
 }
 
 /// Returns height of left sub-tree, a positive integer.
-int _leftBalance(AvlNode? node) {
-  if (node == null) return 0;
-
-  // [left] and [right] are heights of respective sub-trees.
-  var left = _leftBalance(node.left);
-  var right = _rightBlance(node.right);
-
-  var balance = left + right;
-  expect(true, -1 <= balance && balance <= 1);
-
-  // Add [node] to either [left] or [right], whichever is bigger.
-  return 1 + (left >= right.abs() ? left : right.abs());
+int _left_balance(
+  final AvlNode? node,
+) {
+  if (node == null) {
+    return 0;
+  } else {
+    // [left] and [right] are heights of respective sub-trees.
+    var left = _left_balance(node.left);
+    var right = _right_balance(node.right);
+    var balance = left + right;
+    expect(true, -1 <= balance && balance <= 1);
+    // Add [node] to either [left] or [right], whichever is bigger.
+    return 1 + (left >= right.abs() ? left : right.abs());
+  }
 }
 
 /// Returns height of right sub-tree, a negative integer.
-int _rightBlance(AvlNode? node) {
+int _right_balance(final AvlNode? node,) {
   if (node == null) return 0;
-
   // [left] and [right] are heights of respective sub-trees.
-  var left = _leftBalance(node.left);
-  var right = _rightBlance(node.right);
-
-  var balance = left + right;
+  final left = _left_balance(node.left);
+  final right = _right_balance(node.right);
+  final balance = left + right;
   expect(true, -1 <= balance && balance <= 1);
-
   // Add [node] to either [left] or [right], whichever is bigger.
   return (right.abs() >= left ? right : -left) - 1;
 }

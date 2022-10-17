@@ -43,6 +43,8 @@ class AvlTree<V extends Comparable> extends BinaryTreeADT<AvlNode<V>, V> {
   /// Creates an empty AVL tree.
   AvlTree();
 
+  int Function(V, V) get compare => (final a, final b) => a.compareTo(b);
+
   /// Creates an AVL tree with all the values of [list].
   AvlTree.fromList(List<V> list) {
     for (var value in list) {
@@ -103,7 +105,7 @@ class AvlTree<V extends Comparable> extends BinaryTreeADT<AvlNode<V>, V> {
           node.balanceFactor = lChild.balanceFactor = 0;
       }
       rGrandChild.balanceFactor = 0;
-      // Left Right rotation is perfomed to balance [node].
+      // Left Right rotation is performed to balance [node].
       node.left = _rotateLeft(lChild);
       node = _rotateRight(node);
     }

@@ -7,23 +7,24 @@ import 'binary_tree.dart';
 /// * It's left subtree has nodes which have lesser value.
 /// * It's right subtree has nodes which have greater value.
 /// * Left and right subtrees are also BST.
-class BinarySearchTree<V extends Comparable>
-    extends BinaryTreeADT<BinaryNode<V>, V> {
+class BinarySearchTree<V> extends BinaryTreeADT<BinaryNode<V>, V> {
+  final int Function(V, V?) compare;
   /// Root of the tree
   BinaryNode<V>? root;
 
+
   /// Creates an empty BST.
-  BinarySearchTree();
+  BinarySearchTree(this.compare);
 
   /// Creates a BST with all the values of [list].
-  BinarySearchTree.fromList(List<V> list) {
+  BinarySearchTree.fromList(List<V> list, this.compare) {
     for (var value in list) {
       add(value);
     }
   }
 
   /// Creates a new BST with a single [value].
-  BinarySearchTree.withSingleValue(V value) : root = BinaryNode(value);
+  BinarySearchTree.withSingleValue(V value, this.compare) : root = BinaryNode(value);
 
   @override
   void add(V value) {
@@ -37,7 +38,7 @@ class BinarySearchTree<V extends Comparable>
 
   /// Balances the height of the binary tree.
   void balance() {
-    var list = inOrder();
+    var list = in_order();
     if (list.length > 2) {
       nullify();
       _balance(list);
@@ -86,9 +87,9 @@ class BinarySearchTree<V extends Comparable>
     // Base Case, Key not found
     if (node == null) return node;
 
-    if (node.value!.compareTo(value) > 0) {
+    if (compare(node.value!, value) > 0) {
       node.left = _delete(node.left, value);
-    } else if (node.value!.compareTo(value) < 0) {
+    } else if (compare(node.value!, value) < 0) {
       node.right = _delete(node.right, value);
     } else {
       // Node with value found.
